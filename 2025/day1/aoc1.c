@@ -37,6 +37,7 @@ int main()
         printf("The dial is rotated %c%d to point at %d.\n", line[0], num ,start);
     }
     printf("Times reached 0: %d\n", reached_zero);
+    fclose(INPUT);
 
     return 0;
 }
