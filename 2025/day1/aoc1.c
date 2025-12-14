@@ -6,7 +6,7 @@
 // it's clock like, goes from 99 to 0, turning it to the right will increase the numbers, turning it to the left will decrease the numbers
 // the objective is to figure out how many times does the dial reach 0
 
-#define INPUT "input"
+#define INPUT "../input.txt"
 #define DEFAULT_START 50
 
 #include <stdio.h>
@@ -19,6 +19,11 @@ int main()
     int reached_zero = 0;
     char line[8]; // R001\n
     FILE *file = fopen(INPUT, "r");
+    if (file  == NULL)
+    {
+        printf("Input file absent or corrupted.");
+        return 1;
+    }
     while (fgets(line,sizeof(line), file))
     {
         int num = atoi(line+1);
@@ -37,7 +42,7 @@ int main()
         printf("The dial is rotated %c%d to point at %d.\n", line[0], num ,start);
     }
     printf("Times reached 0: %d\n", reached_zero);
-    fclose(INPUT);
+    fclose(file);
 
     return 0;
 }
