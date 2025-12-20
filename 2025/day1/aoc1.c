@@ -6,42 +6,54 @@
 // it's clock like, goes from 99 to 0, turning it to the right will increase the numbers, turning it to the left will decrease the numbers
 // the objective is to figure out how many times does the dial reach 0
 
-#define INPUT "../input.txt"
+#define INPUT "input.txt"
 #define DEFAULT_START 50
+#define MAX_DIAL 99
+#define MIN_DIAL 0
+#define DIAL_SIZE 100
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main()
 {
-    int start = DEFAULT_START;
-    printf("The dial starts by pointing at %d\n", start);
-    int reached_zero = 0;
-    char line[8]; // R001\n
+    int dial = DEFAULT_START;
+    printf("The dial starts by pointing at %d\n", dial);
+    int move;
+    int hit_zero = 0;
+    char line[12]; // R001\n
     FILE *file = fopen(INPUT, "r");
     if (file  == NULL)
     {
         printf("Input file absent or corrupted.");
         return 1;
     }
+
     while (fgets(line,sizeof(line), file))
     {
-        int num = atoi(line+1);
-        if (line[0] == 'R')
+        line[strcspn(line, "\n")] = '\0';
+        move = atoi(line+1);
+
+        for (int i = 0; i < move; i++)
         {
-            start = (start + num) % 100;
+            if (line[0] == 'L')
+            {
+                dial -= 1;
+            }
+            else
+            {
+                dial += 1;
+            }
+            printf("Rotation: %c%d. Dial points to %d.\n", line[0], 1 ,dial % 100);
+
+            if ((dial % 100) == 0)
+            {
+                hit_zero++;
+            }
         }
-        else if (line[0] == 'L')
-        {
-           start = (start - num + 100) % 100;
-        }
-        if (start == 0)
-        {
-            reached_zero++;
-        }
-        printf("The dial is rotated %c%d to point at %d.\n", line[0], num ,start);
     }
-    printf("Times reached 0: %d\n", reached_zero);
+    printf("How many times the dial hit 0: %d\n", hit_zero);
     fclose(file);
 
     return 0;
